@@ -1,0 +1,205 @@
+import { StyleSheet, Switch, Platform } from 'react-native';
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
+
+import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useColorScheme, useColorSchemeManager } from '@/hooks/useColorSchemeManager';
+import { Colors } from '../../constants/Colors';
+
+const REPEAT_COUNT_KEY = '@repeat_count_preference';
+
+export default function SettingsScreen() {
+  const { colorScheme } = useColorSchemeManager();
+  const optionContainerStyle = {
+    ...styles.optionContainer,
+    borderBottomColor: Colors[colorScheme ?? 'light'].icon,
+  };
+  const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'dark');
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [repeatCount, setRepeatCount] = useState('5');
+
+  useEffect(() => {
+    const loadRepeatCount = async () => {
+      try {
+        const savedCount = await AsyncStorage.getItem(REPEAT_COUNT_KEY);
+        if (savedCount) {
+          setRepeatCount(savedCount);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar contagem de repetições:', error);
+      }
+    };
+    loadRepeatCount();
+  }, []);
+
+  // Atualiza o estado do tema quando o colorScheme mudar
+  useEffect(() => {
+    setIsDarkMode(colorScheme === 'dark');
+  }, [colorScheme]);
+
+  // Função para alternar as notificações
+  const toggleNotifications = () => {
+    setNotificationsEnabled(previousState => !previousState);
+  };
+
+  // Função para alternar o tema
+  const { setColorScheme } = useColorSchemeManager();
+  const toggleTheme = () => {
+    const newTheme = isDarkMode ? 'light' : 'dark';
+    setColorScheme(newTheme);
+    setIsDarkMode(!isDarkMode);
+  };
+
+  return (
+    <ParallaxScrollView
+      headerBackgroundColor={{ light: Colors.light.background, dark: Colors.dark.background }}
+      headerImage={
+        <IconSymbol
+          color={Colors[colorScheme ?? 'light'].icon}
+          size={310}
+          name="gear"
+          style={getHeaderImageStyle(colorScheme)}
+        />
+      }>
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">Configurações</ThemedText>
+      </ThemedView>
+      
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle" style={styles.sectionTitle}>Preferências</ThemedText>
+        
+        {/* Opção de Tema */}
+        <ThemedView style={optionContainerStyle}>
+          <ThemedView style={styles.optionTextContainer}>
+            <IconSymbol 
+              name="gear" 
+              size={24} 
+              color={Colors[colorScheme ?? 'light'].icon} 
+            />
+            <ThemedText style={styles.optionText}>Tema Escuro</ThemedText>
+          </ThemedView>
+          <Switch
+            trackColor={{ false: '#767577', true: Colors[colorScheme ?? 'light'].tint }}
+            thumbColor={isDarkMode ? '#ffffff' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleTheme}
+            value={isDarkMode}
+          />
+        </ThemedView>
+        
+        {/* Opção de Notificações */}
+        <ThemedView style={optionContainerStyle}>
+          <ThemedView style={styles.optionTextContainer}>
+            <IconSymbol 
+              name="gear" 
+              size={24} 
+              color={Colors[colorScheme ?? 'light'].icon} 
+            />
+            <ThemedText style={styles.optionText}>Permitir Notificações</ThemedText>
+          </ThemedView>
+          <Switch
+            trackColor={{ false: '#767577', true: Colors[colorScheme ?? 'light'].tint }}
+            thumbColor={notificationsEnabled ? '#ffffff' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleNotifications}
+            value={notificationsEnabled}
+          />
+        </ThemedView>
+
+        {/* Opção de Quantidade de Repetições */}
+        <ThemedView style={optionContainerStyle}>
+          <ThemedView style={styles.optionTextContainer}>
+            <IconSymbol 
+              name="repeat" 
+              size={24} 
+              color={Colors[colorScheme ?? 'light'].icon} 
+            />
+            <ThemedText style={styles.optionText}>Quantidade de Repetições</ThemedText>
+          </ThemedView>
+          <Picker
+            selectedValue={repeatCount}
+            style={{ width: 100 }}
+            onValueChange={async (itemValue) => {
+              setRepeatCount(itemValue);
+              try {
+                await AsyncStorage.setItem(REPEAT_COUNT_KEY, itemValue);
+              } catch (error) {
+                console.error('Erro ao salvar contagem de repetições:', error);
+              }
+            }}
+          >
+            <Picker.Item label="5" value="5" />
+            <Picker.Item label="7" value="7" />
+            <Picker.Item label="10" value="10" />
+            <Picker.Item label="15" value="15" />
+            <Picker.Item label="30" value="30" />
+          </Picker>
+        </ThemedView>
+      </ThemedView>
+      
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle" style={styles.sectionTitle}>Sobre</ThemedText>
+        <ThemedText style={styles.aboutText}>
+          LembraAi é um aplicativo de gerenciamento de tarefas e lembretes que ajuda você a organizar seu dia a dia.
+        </ThemedText>
+        <ThemedText style={styles.versionText}>Versão 1.0.0</ThemedText>
+      </ThemedView>
+    </ParallaxScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  headerImage: {
+    bottom: -90,
+    left: -35,
+    position: 'absolute',
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 20,
+  },
+  section: {
+    marginVertical: 16,
+    paddingHorizontal: 8,
+  },
+  sectionTitle: {
+    marginBottom: 16,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  optionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  optionTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  optionText: {
+    fontSize: 16,
+  },
+  aboutText: {
+    marginBottom: 8,
+    lineHeight: 22,
+  },
+  versionText: {
+    marginTop: 8,
+    fontSize: 14,
+    opacity: 0.7,
+  },
+});
+
+// Função para obter o estilo dinâmico do headerImage
+const getHeaderImageStyle = (scheme: string | null | undefined) => ({
+  ...styles.headerImage,
+  color: Colors[scheme as keyof typeof Colors]?.icon ?? Colors.light.icon,
+});
