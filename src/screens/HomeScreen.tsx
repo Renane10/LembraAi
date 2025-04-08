@@ -82,12 +82,13 @@ export default function HomeScreen() {
   }
   
 
+  const REPEAT_COUNT_KEY = '@repeat_count_preference'
   const [repeatCount, setRepeatCount] = useState('5')
 
   useEffect(() => {
     const loadRepeatCount = async () => {
       try {
-        const savedCount = await AsyncStorage.getItem('@repeat_count_preference')
+        const savedCount = await AsyncStorage.getItem(REPEAT_COUNT_KEY)
         if (savedCount) {
           setRepeatCount(savedCount)
         }
@@ -95,10 +96,27 @@ export default function HomeScreen() {
         console.error('Erro ao carregar contagem de repetições:', error)
       }
     }
+
+    // Carrega o valor inicial
     loadRepeatCount()
+
+    // Configura um listener para mudanças no AsyncStorage
+    // Note: AsyncStorage doesn't have native change event listeners
+    // Using a manual approach to handle value updates
+    const checkForChanges = setInterval(async () => {
+      const savedCount = await AsyncStorage.getItem(REPEAT_COUNT_KEY)
+      if (savedCount) {
+        setRepeatCount(savedCount)
+      }
+    })
+
+    // Limpa o listener quando o componente é desmontado
+    return () => {
+      clearInterval(checkForChanges)
+    }
   }, [])
 
-  const addTask = () => {
+  const addTask = (): void => {
     if (!newTaskTitle.trim()) return
 
     const newTasks: Task[] = []
