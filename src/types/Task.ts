@@ -7,4 +7,6 @@ export interface Task {
   completed: boolean;
   completedDate?: Date;
   repeat?: 'daily' | 'weekly' | 'monthly' | 'none';
+  reminderBefore?: number;
+  reminderAfter?: number;
 }

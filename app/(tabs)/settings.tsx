@@ -11,6 +11,8 @@ import { useColorScheme, useColorSchemeManager } from '@/hooks/useColorSchemeMan
 import { Colors } from '../../constants/Colors';
 
 const REPEAT_COUNT_KEY = '@repeat_count_preference';
+const REMINDER_BEFORE_KEY = '@reminder_before_preference';
+const REMINDER_AFTER_KEY = '@reminder_after_preference';
 
 export default function SettingsScreen() {
   const { colorScheme } = useColorSchemeManager();
@@ -21,19 +23,26 @@ export default function SettingsScreen() {
   const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'dark');
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [repeatCount, setRepeatCount] = useState('5');
+  const [reminderBefore, setReminderBefore] = useState('30');
+  const [reminderAfter, setReminderAfter] = useState('30');
 
   useEffect(() => {
-    const loadRepeatCount = async () => {
+    const loadPreferences = async () => {
       try {
-        const savedCount = await AsyncStorage.getItem(REPEAT_COUNT_KEY);
-        if (savedCount) {
-          setRepeatCount(savedCount);
-        }
+        const [savedCount, savedBefore, savedAfter] = await Promise.all([
+          AsyncStorage.getItem(REPEAT_COUNT_KEY),
+          AsyncStorage.getItem(REMINDER_BEFORE_KEY),
+          AsyncStorage.getItem(REMINDER_AFTER_KEY)
+        ]);
+
+        if (savedCount) setRepeatCount(savedCount);
+        if (savedBefore) setReminderBefore(savedBefore);
+        if (savedAfter) setReminderAfter(savedAfter);
       } catch (error) {
-        console.error('Erro ao carregar contagem de repetições:', error);
+        console.error('Erro ao carregar preferências:', error);
       }
     };
-    loadRepeatCount();
+    loadPreferences();
   }, []);
 
   // Atualiza o estado do tema quando o colorScheme mudar
@@ -137,6 +146,64 @@ export default function SettingsScreen() {
             <Picker.Item label="10" value="10" />
             <Picker.Item label="15" value="15" />
             <Picker.Item label="30" value="30" />
+          </Picker>
+        </ThemedView>
+
+        {/* Opção de Lembrete Antes do Prazo */}
+        <ThemedView style={optionContainerStyle}>
+          <ThemedView style={styles.optionTextContainer}>
+            <IconSymbol 
+              name="bell" 
+              size={24} 
+              color={Colors[colorScheme ?? 'light'].icon} 
+            />
+            <ThemedText style={styles.optionText}>Lembrete Antes do Prazo (minutos)</ThemedText>
+          </ThemedView>
+          <Picker
+            selectedValue={reminderBefore}
+            style={{ width: 100 }}
+            onValueChange={async (itemValue) => {
+              setReminderBefore(itemValue);
+              try {
+                await AsyncStorage.setItem(REMINDER_BEFORE_KEY, itemValue);
+              } catch (error) {
+                console.error('Erro ao salvar tempo de lembrete:', error);
+              }
+            }}
+          >
+            <Picker.Item label="15" value="15" />
+            <Picker.Item label="30" value="30" />
+            <Picker.Item label="60" value="60" />
+            <Picker.Item label="120" value="120" />
+          </Picker>
+        </ThemedView>
+
+        {/* Opção de Lembrete Após o Prazo */}
+        <ThemedView style={optionContainerStyle}>
+          <ThemedView style={styles.optionTextContainer}>
+            <IconSymbol 
+              name="bell.badge" 
+              size={24} 
+              color={Colors[colorScheme ?? 'light'].icon} 
+            />
+            <ThemedText style={styles.optionText}>Lembrete Após o Prazo (minutos)</ThemedText>
+          </ThemedView>
+          <Picker
+            selectedValue={reminderAfter}
+            style={{ width: 100 }}
+            onValueChange={async (itemValue) => {
+              setReminderAfter(itemValue);
+              try {
+                await AsyncStorage.setItem(REMINDER_AFTER_KEY, itemValue);
+              } catch (error) {
+                console.error('Erro ao salvar tempo de lembrete:', error);
+              }
+            }}
+          >
+            <Picker.Item label="15" value="15" />
+            <Picker.Item label="30" value="30" />
+            <Picker.Item label="60" value="60" />
+            <Picker.Item label="120" value="120" />
           </Picker>
         </ThemedView>
       </ThemedView>
