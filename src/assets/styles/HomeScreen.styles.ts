@@ -10,7 +10,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 50,
-    backgroundColor: '#f8f8f8',
   },
   title: {
     fontSize: 24,
@@ -23,6 +22,8 @@ export const styles = StyleSheet.create({
   iconButton: {
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 8,
+    minWidth: 60,
   },
   buttonText: {
     fontSize: 12,
@@ -78,7 +79,6 @@ export const styles = StyleSheet.create({
   emptyText: {
     textAlign: 'center',
     marginTop: 20,
-    color: '#999',
   },
   modalBody: {
     padding: 10,

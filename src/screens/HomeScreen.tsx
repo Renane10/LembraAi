@@ -11,6 +11,8 @@ import { IconSymbol } from '../components/ui/IconSymbol'
 import { useColorScheme } from '../hooks/useColorScheme'
 import { Colors } from '../../constants/Colors'
 import { styles } from '../assets/styles/HomeScreen.styles'
+import { ThemedText } from '@/components/ThemedText'
+
 // Configuração das notificações
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -141,7 +143,7 @@ export default function HomeScreen() {
   return (
       <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Minhas Tarefas</Text>
+        <ThemedText style={styles.title}>Minhas Tarefas</ThemedText>
         <View style={styles.headerButtons}>
           <TouchableOpacity
             style={styles.iconButton}
@@ -152,7 +154,7 @@ export default function HomeScreen() {
               size={24}
               color={Colors[colorScheme].icon}
             />
-            <Text style={styles.buttonText}>Nova</Text>
+            <ThemedText style={styles.buttonText}>Nova</ThemedText>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -164,14 +166,14 @@ export default function HomeScreen() {
               size={24}
               color={Colors[colorScheme].icon}
             />
-            <Text style={styles.buttonText}>Concluídas</Text>
+            <ThemedText style={styles.buttonText}>Concluídas</ThemedText>
           </TouchableOpacity>
         </View>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {tasks.length === 0 && (
-          <Text style={styles.emptyText}>Nenhuma tarefa cadastrada ainda.</Text>
+          <ThemedText style={styles.emptyText}>Nenhuma tarefa cadastrada ainda.</ThemedText>
         )}
 
         {atrasadas.length > 0 && (
@@ -208,11 +210,11 @@ export default function HomeScreen() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Tarefas Concluídas</Text>
+              <ThemedText style={styles.modalTitle}>Tarefas Concluídas</ThemedText>
               <TouchableOpacity
                 onPress={() => setShowCompletedTasksModal(false)}
               >
-                <Text style={styles.closeButton}>Fechar</Text>
+                <ThemedText style={styles.closeButton}>Fechar</ThemedText>
               </TouchableOpacity>
             </View>
 
@@ -220,15 +222,15 @@ export default function HomeScreen() {
               {concluidas.length > 0 ? (
                 concluidas.map((task) => (
                   <View key={task.id} style={styles.completedTaskItem}>
-                    <Text style={styles.completedTaskTitle}>{task.title}</Text>
-                    <Text style={styles.completedTaskDate}>
+                    <ThemedText style={styles.completedTaskTitle}>{task.title}</ThemedText>
+                    <ThemedText style={styles.completedTaskDate}>
                       Concluída em:{' '}
                       {task.completedDate?.toLocaleDateString('pt-BR')}
-                    </Text>
+                    </ThemedText>
                   </View>
                 ))
               ) : (
-                <Text style={styles.emptyText}>Nenhuma tarefa concluída</Text>
+                <ThemedText style={styles.emptyText}>Nenhuma tarefa concluída</ThemedText>
               )}
             </ScrollView>
           </View>

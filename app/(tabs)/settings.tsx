@@ -81,25 +81,6 @@ export default function SettingsScreen() {
       <ThemedView style={styles.section}>
         <ThemedText type="subtitle" style={styles.sectionTitle}>Preferências</ThemedText>
         
-        {/* Opção de Tema */}
-        <ThemedView style={optionContainerStyle}>
-          <ThemedView style={styles.optionTextContainer}>
-            <IconSymbol 
-              name="gear" 
-              size={24} 
-              color={Colors[colorScheme ?? 'light'].icon} 
-            />
-            <ThemedText style={styles.optionText}>Tema Escuro</ThemedText>
-          </ThemedView>
-          <Switch
-            trackColor={{ false: '#767577', true: Colors[colorScheme ?? 'light'].tint }}
-            thumbColor={isDarkMode ? '#ffffff' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleTheme}
-            value={isDarkMode}
-          />
-        </ThemedView>
-        
         {/* Opção de Notificações */}
         <ThemedView style={optionContainerStyle}>
           <ThemedView style={styles.optionTextContainer}>

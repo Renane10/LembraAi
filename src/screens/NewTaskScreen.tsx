@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { View, ScrollView, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import { View, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 'react-native'
+import { ThemedText } from '../components/ThemedText'
+import { ThemedView } from '../components/ThemedView'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import DateTimePicker from '@react-native-community/datetimepicker'
@@ -9,6 +11,7 @@ import { Task } from '../types/Task'
 import { IconSymbol } from '../components/ui/IconSymbol'
 import { useColorScheme } from '../hooks/useColorScheme'
 import { Colors } from '../../constants/Colors'
+import { styles } from '../assets/styles/NewTaskScreen.styles'
 
 export default function NewTaskScreen() {
   const router = useRouter()
@@ -112,7 +115,7 @@ export default function NewTaskScreen() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
+      <ThemedView style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <IconSymbol
             name="chevron.left"
@@ -120,8 +123,8 @@ export default function NewTaskScreen() {
             color={Colors[colorScheme].icon}
           />
         </TouchableOpacity>
-        <Text style={styles.title}>Nova Tarefa</Text>
-      </View>
+        <ThemedText style={styles.title}>Nova Tarefa</ThemedText>
+      </ThemedView>
 
       <View style={styles.form}>
         <TextInput
@@ -149,14 +152,14 @@ export default function NewTaskScreen() {
           style={[styles.input, { justifyContent: 'center' }]}
           onPress={() => setShowDatePicker(true)}
         >
-          <Text>{newTaskDate.toLocaleDateString('pt-BR')} {newTaskDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</Text>
+          <ThemedText>{newTaskDate.toLocaleDateString('pt-BR')} {newTaskDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.input, { justifyContent: 'center' }]}
           onPress={() => setShowTimePicker(true)}
         >
-          <Text>Horário: {newTaskDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</Text>
+          <ThemedText>Horário: {newTaskDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</ThemedText>
         </TouchableOpacity>
 
         {showDatePicker && (
@@ -178,7 +181,7 @@ export default function NewTaskScreen() {
         )}
 
         <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Repetição</Text>
+          <ThemedText style={styles.pickerLabel}>Repetição</ThemedText>
           <Picker
             selectedValue={newTaskRepeat}
             style={styles.picker}
@@ -193,7 +196,7 @@ export default function NewTaskScreen() {
 
         {newTaskRepeat !== 'none' && (
           <View style={styles.pickerContainer}>
-            <Text style={styles.pickerLabel}>Quantidade de repetições</Text>
+            <ThemedText style={styles.pickerLabel}>Quantidade de repetições</ThemedText>
             <Picker
               selectedValue={selectedRepeatCount}
               style={styles.picker}
@@ -210,7 +213,7 @@ export default function NewTaskScreen() {
         )}
 
         <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Lembrete antes do prazo (minutos)</Text>
+          <ThemedText style={styles.pickerLabel}>Lembrete antes do prazo (minutos)</ThemedText>
           <Picker
             selectedValue={selectedReminderBefore}
             style={styles.picker}
@@ -225,7 +228,7 @@ export default function NewTaskScreen() {
         </View>
 
         <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Lembrete após o prazo (minutos)</Text>
+          <ThemedText style={styles.pickerLabel}>Lembrete após o prazo (minutos)</ThemedText>
           <Picker
             selectedValue={selectedReminderAfter}
             style={styles.picker}
@@ -240,71 +243,9 @@ export default function NewTaskScreen() {
         </View>
 
         <TouchableOpacity style={styles.addButton} onPress={addTask}>
-          <Text style={styles.addButtonText}>Adicionar Tarefa</Text>
+          <ThemedText style={styles.addButtonText}>Adicionar Tarefa</ThemedText>
         </TouchableOpacity>
       </View>
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20,
-    paddingTop: 60,
-    backgroundColor: '#f8f8f8',
-  },
-  backButton: {
-    marginRight: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  form: {
-    padding: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    backgroundColor: '#fff',
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  pickerContainer: {
-    marginBottom: 16,
-  },
-  pickerLabel: {
-    fontSize: 16,
-    marginBottom: 8,
-    opacity: 0.8,
-  },
-  picker: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-  addButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 16,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  addButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-})
