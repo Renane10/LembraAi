@@ -20,8 +20,7 @@ export default function SettingsScreen() {
     ...styles.optionContainer,
     borderBottomColor: Colors[colorScheme ?? 'light'].icon,
   };
-  const [isDarkMode, setIsDarkMode] = useState(colorScheme === 'dark');
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+
   const [repeatCount, setRepeatCount] = useState('5');
   const [reminderBefore, setReminderBefore] = useState('30');
   const [reminderAfter, setReminderAfter] = useState('30');
@@ -45,24 +44,6 @@ export default function SettingsScreen() {
     loadPreferences();
   }, []);
 
-  // Atualiza o estado do tema quando o colorScheme mudar
-  useEffect(() => {
-    setIsDarkMode(colorScheme === 'dark');
-  }, [colorScheme]);
-
-  // Função para alternar as notificações
-  const toggleNotifications = () => {
-    setNotificationsEnabled(previousState => !previousState);
-  };
-
-  // Função para alternar o tema
-  const { setColorScheme } = useColorSchemeManager();
-  const toggleTheme = () => {
-    const newTheme = isDarkMode ? 'light' : 'dark';
-    setColorScheme(newTheme);
-    setIsDarkMode(!isDarkMode);
-  };
-
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: Colors.light.background, dark: Colors.dark.background }}
@@ -80,25 +61,6 @@ export default function SettingsScreen() {
       
       <ThemedView style={styles.section}>
         <ThemedText type="subtitle" style={styles.sectionTitle}>Preferências</ThemedText>
-        
-        {/* Opção de Notificações */}
-        <ThemedView style={optionContainerStyle}>
-          <ThemedView style={styles.optionTextContainer}>
-            <IconSymbol 
-              name="gear" 
-              size={24} 
-              color={Colors[colorScheme ?? 'light'].icon} 
-            />
-            <ThemedText style={styles.optionText}>Permitir Notificações</ThemedText>
-          </ThemedView>
-          <Switch
-            trackColor={{ false: '#767577', true: Colors[colorScheme ?? 'light'].tint }}
-            thumbColor={notificationsEnabled ? '#ffffff' : '#f4f3f4'}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleNotifications}
-            value={notificationsEnabled}
-          />
-        </ThemedView>
 
         {/* Opção de Quantidade de Repetições */}
         <ThemedView style={optionContainerStyle}>

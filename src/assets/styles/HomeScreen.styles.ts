@@ -39,7 +39,6 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -57,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   closeButton: {
     fontSize: 16,
-    color: 'blue',
+    color: '#0a7ea4',
   },
   modalScrollView: {
     maxHeight: '90%',
@@ -95,15 +94,14 @@ export const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   addButton: {
-    backgroundColor: '#007AFF',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
+    marginTop: 20,
   },
   addButtonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
   },
   pickerLabel: {
     marginTop: 10,
