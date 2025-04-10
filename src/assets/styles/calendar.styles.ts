@@ -3,22 +3,17 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    width: '100%',
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
+  taskListContainer: {
+    width: '100%',
+    marginTop: 20,
+    borderRadius: 10,
+    padding: 15,
   },
-  separator: {
-    height: 1,
-    width: '80%',
-    marginVertical: 20,
-  },
-  text: {
-    fontSize: 16,
+  noTasksText: {
+    marginTop: 20,
     textAlign: 'center',
+    fontSize: 16,
   },
 });
