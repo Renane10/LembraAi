@@ -33,35 +33,32 @@ App de tarefas feito com Expo + React Native. Suporte a tarefas únicas e recorr
 - [x] Estrutura de pastas
 
 ### 2. Navegação
-- [ ] React Navigation com Tabs:
+- [x] React Navigation com Tabs:
   - Home (tarefas do dia)
   - Agenda
   - Criar tarefa
   - Configurações
 
 ### 3. Tarefas
-- [ ] Formulário de criação
-- [ ] Listagem de tarefas
-- [ ] Marcar como concluída
-- [ ] Editar e excluir tarefa
+- [x] Formulário de criação
+- [x] Listagem de tarefas
+- [x] Marcar como concluída
 
 ### 4. Recorrência
-- [ ] Implementar lógica de repetição:
+- [x] Implementar lógica de repetição:
   - diária
   - semanal (dias da semana)
   - mensal
   - anual
 
 ### 5. Notificações
-- [ ] Permissões
-- [ ] Agendamento com `expo-notifications`
+- [x] Permissões
+- [x] Agendamento com `expo-notifications`
 - [ ] Cancelar notificação ao excluir tarefa
 
 ### 6. Configurações
-- [ ] Tema claro/escuro
+- [x] Tema claro/escuro
 - [ ] Toggle de notificações
-- [ ] Placeholder para backup e login
-
 ---
 
 ## 🚀 Como rodar
