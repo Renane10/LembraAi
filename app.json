@@ -8,15 +8,18 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "privacy": "public",
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "package": "com.prozyn.lembraai",
+      "versionCode": 1,
+      "permissions": ["NOTIFICATIONS"],
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.prozyn.lembraai"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -44,7 +47,8 @@
       },
       "eas": {
         "projectId": "6628652b-87a6-4c24-a6ce-97a62c3aba72"
-      }
+      },
+      "privacyPolicyUrl": "https://github.com/Renane10/LembraAi/blob/main/docs/privacy-policy.md"
     }
   }
 }
