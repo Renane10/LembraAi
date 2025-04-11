@@ -16,12 +16,12 @@ App de tarefas feito com Expo + React Native. Suporte a tarefas únicas e recorr
 ## 📅 Funcionalidades Planejadas
 
 - [x] Criar tarefas com título, data e hora
-- [ ] Notificações locais
-- [ ] Recorrência: diária, semanal, mensal, anual
-- [ ] Marcar tarefas como concluídas
-- [ ] Configurações de notificação e tema
-- [ ] Armazenamento local persistente
-- [ ] Agenda com calendário (futuramente)
+- [x] Notificações locais
+- [x] Recorrência: diária, semanal, mensal, anual
+- [x] Marcar tarefas como concluídas
+- [x] Permissão de notificação
+- [x] Armazenamento local persistente
+- [x] Agenda com calendário (futuramente)
 
 ---
 
