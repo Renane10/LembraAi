@@ -20,6 +20,9 @@ const MAPPING = {
   'checkmark': 'check',
   'plus': 'add',
   'list.bullet': 'format-list-bulleted',
+  'exclamationmark.circle': 'error',
+  'exclamationmark.triangle': 'warning',
+  'circle': 'radio-button-unchecked',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],

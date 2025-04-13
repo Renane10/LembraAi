@@ -34,6 +34,7 @@ export default function NewTaskScreen() {
   const [defaultReminderBefore, setDefaultReminderBefore] = useState('30')
   const [defaultReminderAfter, setDefaultReminderAfter] = useState('30')
   const [repeatCount, setRepeatCount] = useState('5')
+  const [taskPriority, setTaskPriority] = useState<Task['priority']>('normal')
 
   const REPEAT_COUNT_KEY = '@repeat_count_preference'
   const REMINDER_BEFORE_KEY = '@reminder_before_preference'
@@ -72,7 +73,8 @@ export default function NewTaskScreen() {
         repeat: newTaskRepeat,
         completed: false,
         reminderBefore: selectedReminderBefore ? parseInt(selectedReminderBefore) : parseInt(defaultReminderBefore),
-        reminderAfter: selectedReminderAfter ? parseInt(selectedReminderAfter) : parseInt(defaultReminderAfter)
+        reminderAfter: selectedReminderAfter ? parseInt(selectedReminderAfter) : parseInt(defaultReminderAfter),
+        priority: taskPriority
       }
 
       newTasks.push(baseTask)
@@ -247,6 +249,21 @@ export default function NewTaskScreen() {
               <Picker.Item label="30 minutos" value="30" color={Colors[colorScheme].text} />
               <Picker.Item label="60 minutos" value="60" color={Colors[colorScheme].text} />
               <Picker.Item label="120 minutos" value="120" color={Colors[colorScheme].text} />
+            </Picker>
+          </View>
+        </View>
+
+        <View style={styles.pickerContainer}>
+          <ThemedText style={styles.pickerLabel}>Prioridade</ThemedText>
+          <View style={[styles.picker, { backgroundColor: Colors[colorScheme].background }]}>
+            <Picker
+              selectedValue={taskPriority}
+              style={[styles.picker, { color: Colors[colorScheme].text }]}
+              onValueChange={(itemValue) => setTaskPriority(itemValue)}
+            >
+              <Picker.Item label="Normal" value="normal" color={Colors[colorScheme].text} />
+              <Picker.Item label="Importante" value="important" color="#FF8C00" />
+              <Picker.Item label="Urgente" value="urgent" color="#FF0000" />
             </Picker>
           </View>
         </View>

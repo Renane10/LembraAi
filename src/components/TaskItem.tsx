@@ -37,10 +37,44 @@ export default function TaskItem({ task, onComplete }: Props) {
 
   const borderColor = useThemeColor({}, 'icon')
 
+  // Determinar a cor da prioridade
+  const getPriorityColor = () => {
+    switch (task.priority) {
+      case 'important':
+        return '#FF8C00' // Laranja
+      case 'urgent':
+        return '#FF0000' // Vermelho
+      default:
+        return Colors[colorScheme].text // Cor padrão
+    }
+  }
+
+  // Determinar o ícone da prioridade
+  const getPriorityIcon = () => {
+    switch (task.priority) {
+      case 'important':
+        return 'exclamationmark.circle'
+      case 'urgent':
+        return 'exclamationmark.triangle'
+      default:
+        return 'circle'
+    }
+  }
+
   return (
     <ThemedView style={[styles.container, { borderColor }]}>
       <ThemedView style={styles.content}>
-        <ThemedText style={styles.title}>{task.title}</ThemedText>
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText style={styles.title}>{task.title}</ThemedText>
+          {task.priority && task.priority !== 'normal' && (
+            <IconSymbol 
+              name={getPriorityIcon()} 
+              size={20} 
+              color={getPriorityColor()} 
+              style={styles.priorityIcon}
+            />
+          )}
+        </ThemedView>
         {task.description && (
           <ThemedText style={styles.description}>{task.description}</ThemedText>
         )}
@@ -76,8 +110,17 @@ const styles = StyleSheet.create({
   content: {
     flex: 1
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
   title: {
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    flex: 1
+  },
+  priorityIcon: {
+    marginLeft: 8
   },
   date: {
     opacity: 0.7

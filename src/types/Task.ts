@@ -9,4 +9,5 @@ export interface Task {
   repeat?: 'daily' | 'weekly' | 'monthly' | 'none';
   reminderBefore?: number;
   reminderAfter?: number;
+  priority?: 'normal' | 'important' | 'urgent';
 }
