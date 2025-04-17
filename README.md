@@ -58,7 +58,6 @@ App de tarefas feito com Expo + React Native. Suporte a tarefas únicas e recorr
 
 ### 6. Configurações
 - [x] Tema claro/escuro
-- [ ] Toggle de notificações
 ---
 
 ## 🚀 Como rodar
