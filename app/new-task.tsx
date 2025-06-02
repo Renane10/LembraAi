@@ -171,6 +171,7 @@ export default function NewTaskScreen() {
             mode="date"
             display="default"
             onChange={handleDateChange}
+            locale="pt-BR"
           />
         )}
 
@@ -180,6 +181,7 @@ export default function NewTaskScreen() {
             mode="time"
             display="default"
             onChange={handleTimeChange}
+            locale="pt-BR"
           />
         )}
 

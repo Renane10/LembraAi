@@ -35,7 +35,7 @@ export const Calendar: React.FC<CalendarProps> = ({ onDayPress, markedDates }) =
           textDayFontFamily: undefined,
           textMonthFontFamily: undefined,
           textDayHeaderFontFamily: undefined,
-
+          
           backgroundColor: 'transparent',
           calendarBackground: 'transparent',
           monthNames: [
@@ -63,6 +63,8 @@ export const Calendar: React.FC<CalendarProps> = ({ onDayPress, markedDates }) =
           selectedDotColor: '#ffffff',
           arrowColor: '#007AFF',
           indicatorColor: '#007AFF',
+          todayButtonText: 'Hoje',
+          monthTextColor: '#2d4150',
         }}
       />
     </ThemedView>
