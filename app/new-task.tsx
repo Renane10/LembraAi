@@ -155,7 +155,7 @@ export default function NewTaskScreen() {
           style={[styles.input, { justifyContent: 'center', backgroundColor: Colors[colorScheme].background }]}
           onPress={() => setShowDatePicker(true)}
         >
-          <ThemedText>{newTaskDate.toLocaleDateString('pt-BR')} {newTaskDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</ThemedText>
+          <ThemedText>{newTaskDate.toLocaleDateString('pt-BR')}</ThemedText>
         </TouchableOpacity>
 
         <TouchableOpacity

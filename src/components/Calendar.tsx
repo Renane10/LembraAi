@@ -41,7 +41,7 @@ export const Calendar: React.FC<CalendarProps> = ({ onDayPress, markedDates }) =
           monthNames: [
             'Janeiro',
             'Fevereiro',
-            'Março',
+            'MarÃ§o',
             'Abril',
             'Maio',
             'Junho',
@@ -52,8 +52,8 @@ export const Calendar: React.FC<CalendarProps> = ({ onDayPress, markedDates }) =
             'Novembro',
             'Dezembro'
           ],
-          dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+          dayNames: ['Domingo', 'Segunda', 'TerÃ§a', 'Quarta', 'Quinta', 'Sexta', 'SÃ¡bado'],
+          dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'SÃ¡b'],
           selectedDayBackgroundColor: '#007AFF',
           selectedDayTextColor: '#ffffff',
           todayTextColor: '#007AFF',
