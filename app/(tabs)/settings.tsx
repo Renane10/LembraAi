@@ -100,7 +100,7 @@ export default function SettingsScreen() {
         <ThemedView style={optionContainerStyle}>
           <ThemedView style={styles.optionTextContainer}>
             <IconSymbol 
-              name="bell" 
+              name="alarm" 
               size={24} 
               color={Colors[colorScheme ?? 'light'].icon} 
             />
@@ -133,7 +133,7 @@ export default function SettingsScreen() {
         <ThemedView style={optionContainerStyle}>
           <ThemedView style={styles.optionTextContainer}>
             <IconSymbol 
-              name="bell.badge" 
+              name="alarm" 
               size={24} 
               color={Colors[colorScheme ?? 'light'].icon} 
             />

@@ -1,6 +1,6 @@
 // This file is a fallback for using MaterialIcons on Android and web.
 
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { SymbolWeight } from 'expo-symbols';
 import React from 'react';
 import { OpaqueColorValue, StyleProp, TextStyle } from 'react-native';
@@ -23,31 +23,32 @@ const MAPPING = {
   'exclamationmark.circle': 'error',
   'exclamationmark.triangle': 'warning',
   'circle': 'radio-button-unchecked',
-} as Partial<
-  Record<
-    import('expo-symbols').SymbolViewProps['name'],
-    React.ComponentProps<typeof MaterialIcons>['name']
-  >
->;
+} as const;
 
 export type IconSymbolName = keyof typeof MAPPING;
+
+interface Props {
+  name: IconSymbolName;
+  size?: number;
+  color?: string;
+  style?: StyleProp<TextStyle>;
+}
 
 /**
  * An icon component that uses native SFSymbols on iOS, and MaterialIcons on Android and web. This ensures a consistent look across platforms, and optimal resource usage.
  *
  * Icon `name`s are based on SFSymbols and require manual mapping to MaterialIcons.
  */
-export function IconSymbol({
-  name,
-  size = 24,
-  color,
-  style,
-}: {
-  name: IconSymbolName;
-  size?: number;
-  color: string | OpaqueColorValue;
-  style?: StyleProp<TextStyle>;
-  weight?: SymbolWeight;
-}) {
-  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
+export function IconSymbol({ name, size = 24, color = '#000', style }: Props) {
+  // Se não houver mapeamento específico, usa o mesmo nome
+  const materialIconName = MAPPING[name] || name.replace(/\./g, '-') as keyof typeof MaterialIcons.glyphMap;
+  
+  return (
+    <MaterialIcons
+      name={materialIconName}
+      size={size}
+      color={color}
+      style={style}
+    />
+  );
 }

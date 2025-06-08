@@ -23,6 +23,10 @@ Notifications.setNotificationHandler({
   }),
 })
 
+// Adicionar estas importações
+import { getAllCategories } from '@/utils/CategoryManager'
+import { Category } from '@/types/Task'
+
 export default function HomeScreen() {
   const router = useRouter()
   const colorScheme = useColorScheme() ?? 'light'
@@ -119,29 +123,45 @@ export default function HomeScreen() {
     )
   }
 
-  const today = new Date()
-  const atrasadas = tasks.filter(
-    (task) => !task.completed && task.dueDate < today && !isToday(task.dueDate)
-  )
-  const proximas = tasks.filter(
-    (task) => !task.completed && task.dueDate > today && !isToday(task.dueDate)
-  )
-  const dodia = tasks.filter((task) => !task.completed && isToday(task.dueDate))
-  const concluidas = tasks.filter((task) => task.completed)
-
-  // Marca uma tarefa como concluída
-  const completeTask = async (taskId: string) => {
-    const updatedTasks = tasks.map((task) =>
-      task.id === taskId
-        ? { ...task, completed: true, completedDate: new Date() }
-        : task
-    )
-    setTasks(updatedTasks)
-    await AsyncStorage.setItem('@tasks', JSON.stringify(updatedTasks))
-    // Cancela a notificação da tarefa concluída
-    await cancelTaskNotification(taskId)
+  // Adicionar estes estados
+  const [categories, setCategories] = useState<Category[]>([])
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
+  
+  // Adicionar este useEffect para carregar as categorias
+  useEffect(() => {
+    const loadCategories = async () => {
+      const allCategories = await getAllCategories()
+      setCategories(allCategories)
+    }
+    
+    loadCategories()
+  }, [])
+  
+  // Modificar as funções de filtragem para incluir o filtro por categoria
+  const filterTasksByCategory = (taskList: Task[]) => {
+    if (!selectedCategoryId) return taskList
+    return taskList.filter(task => task.category === selectedCategoryId)
   }
-
+  
+  // Modificar as variáveis que filtram as tarefas
+  const today = new Date()
+  const atrasadas = filterTasksByCategory(
+    tasks.filter(
+      (task) => !task.completed && task.dueDate < today && !isToday(task.dueDate)
+    )
+  )
+  const proximas = filterTasksByCategory(
+    tasks.filter(
+      (task) => !task.completed && task.dueDate > today && !isToday(task.dueDate)
+    )
+  )
+  const dodia = filterTasksByCategory(
+    tasks.filter((task) => !task.completed && isToday(task.dueDate))
+  )
+  const concluidas = filterTasksByCategory(
+    tasks.filter((task) => task.completed)
+  )
+  
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.header}>
@@ -170,9 +190,78 @@ export default function HomeScreen() {
             />
             <ThemedText style={styles.buttonText}>Concluídas</ThemedText>
           </TouchableOpacity>
+          
+          {/* Adicionar este botão */}
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => router.push('/manage-categories')}
+          >
+            <IconSymbol
+              name="bookmark"
+              size={24}
+              color={Colors[colorScheme].icon}
+            />
+            <ThemedText style={styles.buttonText}>Categorias</ThemedText>
+          </TouchableOpacity>
         </View>
       </ThemedView>
-
+      
+      {/* Adicionar o filtro de categorias */}
+      <ThemedView style={{ paddingHorizontal: 15, marginBottom: 10 }}>
+        <ThemedText style={{ marginBottom: 5 }}>Filtrar por categoria:</ThemedText>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: !selectedCategoryId ? Colors[colorScheme].tint : Colors[colorScheme].background,
+              paddingHorizontal: 15,
+              paddingVertical: 8,
+              borderRadius: 20,
+              marginRight: 10
+            }}
+            onPress={() => setSelectedCategoryId(null)}
+          >
+            <ThemedText style={{ 
+              color: !selectedCategoryId ? '#fff' : Colors[colorScheme].text 
+            }}>
+              Todas
+            </ThemedText>
+          </TouchableOpacity>
+          
+          {categories.map(category => (
+            <TouchableOpacity
+              key={category.id}
+              style={{
+                backgroundColor: selectedCategoryId === category.id ? category.color : Colors[colorScheme].background,
+                paddingHorizontal: 15,
+                paddingVertical: 8,
+                borderRadius: 20,
+                marginRight: 10,
+                flexDirection: 'row',
+                alignItems: 'center'
+              }}
+              onPress={() => setSelectedCategoryId(category.id === selectedCategoryId ? null : category.id)}
+            >
+              <View 
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 5,
+                  backgroundColor: category.color,
+                  marginRight: 5,
+                  opacity: selectedCategoryId === category.id ? 0.5 : 1
+                }}
+              />
+              <ThemedText style={{ 
+                color: selectedCategoryId === category.id ? '#fff' : Colors[colorScheme].text 
+              }}>
+                {category.name}
+              </ThemedText>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </ThemedView>
+      
+      {/* Resto do componente permanece igual */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {tasks.length === 0 && (
           <ThemedText style={styles.emptyText}>Nenhuma tarefa cadastrada ainda.</ThemedText>
@@ -241,3 +330,33 @@ export default function HomeScreen() {
     </ThemedView>
   )
 }
+
+// Adicione esta função antes do return no componente HomeScreen
+const completeTask = async (taskId: string) => {
+  try {
+    // Encontra a tarefa pelo ID
+    const taskToComplete = tasks.find(task => task.id === taskId);
+    if (!taskToComplete) return;
+    
+    // Atualiza o status da tarefa para completada
+    const updatedTasks = tasks.map(task => {
+      if (task.id === taskId) {
+        return {
+          ...task,
+          completed: true,
+          completedDate: new Date()
+        };
+      }
+      return task;
+    });
+    
+    // Atualiza o estado e salva no AsyncStorage
+    setTasks(updatedTasks);
+    await AsyncStorage.setItem('@tasks', JSON.stringify(updatedTasks));
+    
+    // Cancela as notificações para a tarefa completada
+    await cancelTaskNotification(taskId);
+  } catch (error) {
+    console.error('Erro ao completar tarefa:', error);
+  }
+};

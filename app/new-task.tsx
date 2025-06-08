@@ -1,3 +1,4 @@
+import 'react-native-get-random-values'
 import { useState, useLayoutEffect } from 'react'
 import { View, ScrollView, TouchableOpacity, TextInput } from 'react-native'
 import { ThemedText } from '@/components/ThemedText'
@@ -12,6 +13,11 @@ import { Task } from '@/types/Task'
 import { useColorScheme } from '@/hooks/useColorScheme'
 import { Colors } from '../constants/Colors'
 import { styles } from '@/assets/styles/NewTaskScreen.styles'
+
+// Adicionar estas importações no topo do arquivo
+import { useEffect } from 'react'
+import { Category } from '@/types/Task'
+import { getAllCategories, initializeCategories } from '@/utils/CategoryManager'
 
 export default function NewTaskScreen() {
   const navigation = useNavigation();
@@ -59,6 +65,25 @@ export default function NewTaskScreen() {
     }
   }
 
+  // Adicionar estes estados junto com os outros estados existentes
+  const [categories, setCategories] = useState<Category[]>([])
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
+  
+  // Adicionar este useEffect para carregar as categorias
+  useEffect(() => {
+    const loadCategories = async () => {
+      await initializeCategories()
+      const allCategories = await getAllCategories()
+      setCategories(allCategories)
+      if (allCategories.length > 0) {
+        setSelectedCategoryId(allCategories[0].id)
+      }
+    }
+    
+    loadCategories()
+  }, [])
+  
+  // Modificar a função addTask para incluir a categoria
   const addTask = async (): Promise<void> => {
     if (!newTaskTitle.trim()) return
 
@@ -74,9 +99,11 @@ export default function NewTaskScreen() {
         completed: false,
         reminderBefore: selectedReminderBefore ? parseInt(selectedReminderBefore) : parseInt(defaultReminderBefore),
         reminderAfter: selectedReminderAfter ? parseInt(selectedReminderAfter) : parseInt(defaultReminderAfter),
-        priority: taskPriority
+        priority: taskPriority,
+        category: selectedCategoryId // Adicionar a categoria selecionada
       }
 
+      // Resto da função permanece igual
       newTasks.push(baseTask)
 
       if (newTaskRepeat !== 'none') {
@@ -251,6 +278,27 @@ export default function NewTaskScreen() {
               <Picker.Item label="30 minutos" value="30" color={Colors[colorScheme].text} />
               <Picker.Item label="60 minutos" value="60" color={Colors[colorScheme].text} />
               <Picker.Item label="120 minutos" value="120" color={Colors[colorScheme].text} />
+            </Picker>
+          </View>
+        </View>
+
+        <View style={styles.pickerContainer}>
+          <ThemedText style={styles.pickerLabel}>Categoria</ThemedText>
+          <View style={[styles.picker, { backgroundColor: Colors[colorScheme].background }]}>
+            <Picker
+              selectedValue={selectedCategoryId}
+              style={[styles.picker, { color: Colors[colorScheme].text }]}
+              onValueChange={(itemValue) => setSelectedCategoryId(itemValue)}
+            >
+              <Picker.Item label="Sem categoria" value="" color={Colors[colorScheme].text} />
+              {categories.map((category) => (
+                <Picker.Item 
+                  key={category.id} 
+                  label={category.name} 
+                  value={category.id} 
+                  color={category.color || Colors[colorScheme].text} 
+                />
+              ))}
             </Picker>
           </View>
         </View>

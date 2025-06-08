@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet } from 'react-native'
+import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { Task } from '../types/Task'
 import { IconSymbol } from './ui/IconSymbol'
 import { useColorScheme } from '../hooks/useColorScheme'
@@ -11,6 +11,11 @@ interface Props {
   task: Task
   onComplete?: (taskId: string) => void
 }
+
+// Adicionar estas importações
+import { useEffect, useState } from 'react'
+import { getAllCategories } from '@/utils/CategoryManager'
+import { Category } from '@/types/Task'
 
 export default function TaskItem({ task, onComplete }: Props) {
   const colorScheme = useColorScheme() ?? 'light'
@@ -61,6 +66,25 @@ export default function TaskItem({ task, onComplete }: Props) {
     }
   }
 
+  // Adicionar este estado
+  const [taskCategory, setTaskCategory] = useState<Category | null>(null)
+  
+  // Adicionar este useEffect para carregar a categoria da tarefa
+  useEffect(() => {
+    const loadCategory = async () => {
+      if (task.category) {
+        const categories = await getAllCategories()
+        const category = categories.find(cat => cat.id === task.category)
+        if (category) {
+          setTaskCategory(category)
+        }
+      }
+    }
+    
+    loadCategory()
+  }, [task.category])
+  
+  // No JSX, adicionar a exibição da categoria
   return (
     <ThemedView style={[styles.container, { borderColor }]}>
       <ThemedView style={styles.content}>
@@ -75,6 +99,28 @@ export default function TaskItem({ task, onComplete }: Props) {
             />
           )}
         </ThemedView>
+        
+        {/* Adicionar esta parte para mostrar a categoria */}
+        {taskCategory && (
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 5
+          }}>
+            <View style={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              backgroundColor: taskCategory.color,
+              marginRight: 5
+            }} />
+            <ThemedText style={{ fontSize: 12, opacity: 0.8 }}>
+              {taskCategory.name}
+            </ThemedText>
+          </View>
+        )}
+        
+        {/* Resto do componente permanece igual */}
         {task.description && (
           <ThemedText style={styles.description}>{task.description}</ThemedText>
         )}
